@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "aiogram_declarative"
+version = "0.1.7"
+description = "Another way to struct your telegram bots via Aiogram3"
+authors = ["Aleks"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aiogram = "^3.0.0b2"
+aiogram_dialog = "^2.0.0b2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
