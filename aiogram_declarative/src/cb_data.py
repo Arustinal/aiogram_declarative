@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from inspect import ismethod
 from typing import Optional, Dict, Any, Tuple
 
-from aiogram.dispatcher.event.handler import CallbackType, FilterType
+from aiogram.dispatcher.event.handler import CallbackType
 
 
 @dataclass
@@ -13,9 +13,10 @@ class CallbackData:
     """
 
     callback: CallbackType
-    args: Tuple[FilterType, ...]
+    filters: Tuple[CallbackType, ...]
     bound_filters: Dict[str, Any]
     flags: Optional[Dict[str, Any]]
+    stacklevel: int
 
     def is_callback_initiated(self) -> bool:
         """Is callback initiated as a method?"""
