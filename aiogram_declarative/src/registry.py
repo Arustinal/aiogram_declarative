@@ -3,6 +3,7 @@
 from typing import Union, Tuple, Dict, Any, Type, Generator
 
 from aiogram import Dispatcher, Router as _Router
+from aiogram_declarative.src.router import Router
 
 from aiogram_declarative.abc import AbstractAddon
 from aiogram_declarative.src import CoreJoint
@@ -28,8 +29,7 @@ class Registry:
         self.kwargs = kwargs
 
     def _get_ex_by_cls(self, cls) -> Any:
-        partial_kwargs = resolve_kwargs(cls.__init__, self.kwargs)
-        self._cls_storage[cls] = self._cls_storage.get(cls) or cls(**partial_kwargs)
+        self._cls_storage[cls] = self._cls_storage.get(cls) or cls()
         return self._cls_storage[cls]
 
     def _iter_classes(self, cls) -> Any:
@@ -75,6 +75,10 @@ class Registry:
                         self.router, var_name=name, var_content=attribute
                     )
 
+    def _run_init_hook(self) -> None:
+        for instance in self._iter_instances_by_cls(self._core_cls):
+            instance.init_hook(**resolve_kwargs(instance.init_hook, self.kwargs))
+
     def _del_cls_storage(self) -> None:
         if hasattr(self, "_cls_storage"):
             delattr(self, "_cls_storage")
@@ -83,7 +87,9 @@ class Registry:
         """Build up"""
         if not hasattr(self, "_cls_storage"):
             raise ValueError("Module already initiated")
-        self.router.include_router(self._get_ex_by_cls(self._core_cls).router)
+        self._core_cls.router = self.router  # replace router with dispatcher in optimization purposes
+        self._get_ex_by_cls(self._core_cls)
+        self._run_init_hook()
         self._tie_routers()
         self._register_handler_functions()
         self._tie_addons()
