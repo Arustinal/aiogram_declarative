@@ -3,7 +3,6 @@
 from typing import Union, Tuple, Dict, Any, Type, Generator
 
 from aiogram import Dispatcher, Router as _Router
-from aiogram_declarative.src.router import Router
 
 from aiogram_declarative.abc import AbstractAddon
 from aiogram_declarative.src import CoreJoint
@@ -72,7 +71,7 @@ class Registry:
             for name, attribute in instance.iter_attributes():
                 if addon_handler := addons_by_types.get(type(attribute)):
                     addon_handler.register(
-                        self.router, var_name=name, var_content=attribute
+                        instance.router, var_name=name, var_content=attribute
                     )
 
     def _run_init_hook(self) -> None:
