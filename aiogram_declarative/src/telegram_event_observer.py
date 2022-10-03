@@ -28,7 +28,6 @@ class TelegramEventObserver(_TelegramEventObserver):
             self,
             *args: CallbackType,
             flags: Optional[Dict[str, Any]] = None,
-            _stacklevel: int = 2,
             **bound_filters: Any,
     ) -> Callable[[CallbackType], CallbackType]:
         if not bound_filters:
@@ -37,7 +36,6 @@ class TelegramEventObserver(_TelegramEventObserver):
         def _wrapper(callback: CallbackType) -> CallbackType:
             self.pre_handlers[callback] = CallbackData(
                 callback, filters=args, flags=flags, bound_filters=bound_filters,
-                stacklevel=_stacklevel + 1
             )
             return callback
 
@@ -52,6 +50,5 @@ class TelegramEventObserver(_TelegramEventObserver):
                 cb_data.callback,
                 *cb_data.filters,
                 flags=cb_data.flags,
-                _stacklevel=cb_data.stacklevel,
                 **cb_data.bound_filters
             )

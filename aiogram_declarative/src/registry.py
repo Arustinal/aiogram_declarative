@@ -8,6 +8,7 @@ from aiogram_declarative.abc import AbstractAddon
 from aiogram_declarative.src import CoreJoint
 from aiogram_declarative.src.utils import resolve_kwargs
 
+INIT_HOOK_NAME = 'init_hook'
 
 class Registry:
     """
@@ -76,7 +77,8 @@ class Registry:
 
     def _run_init_hook(self) -> None:
         for instance in self._iter_instances_by_cls(self._core_cls):
-            instance.init_hook(**resolve_kwargs(instance.init_hook, self.kwargs))
+            if hasattr(instance, INIT_HOOK_NAME):
+                instance.init_hook(**resolve_kwargs(instance.init_hook, self.kwargs))
 
     def _del_cls_storage(self) -> None:
         if hasattr(self, "_cls_storage"):

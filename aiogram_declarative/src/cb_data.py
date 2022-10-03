@@ -16,7 +16,6 @@ class CallbackData:
     filters: Tuple[CallbackType, ...]
     bound_filters: Dict[str, Any]
     flags: Optional[Dict[str, Any]]
-    stacklevel: int
 
     def is_callback_initiated(self) -> bool:
         """Is callback initiated as a method?"""
